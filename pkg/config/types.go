@@ -21,6 +21,8 @@ import (
 
 	"k8s.io/client-go/tools/clientcmd"
 	kubeconfig "k8s.io/client-go/tools/clientcmd/api"
+
+	"opendev.org/airship/airshipctl/pkg/document"
 )
 
 // Where possible, json tags match the cli argument names.
@@ -117,7 +119,7 @@ type AuthInfo struct {
 // find the yaml manifests that airship uses to perform its operations)
 type Manifest struct {
 	// Repositories is the map of repository adddressable by a name
-	Repositories map[string]*Repository `json:"repositories"`
+	Repositories map[string]*document.Repository `json:"repositories"`
 
 	// Local Targer path for working or home dirctory for all Manifest Cloned/Returned/Generated
 	TargetPath string `json:"target-path"`

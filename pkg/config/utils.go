@@ -16,6 +16,10 @@ limitations under the License.
 
 package config
 
+import (
+	"opendev.org/airship/airshipctl/pkg/document"
+)
+
 // NewConfig returns a newly initialized Config object
 func NewConfig() *Config {
 	return &Config{
@@ -43,7 +47,7 @@ func NewCluster() *Cluster {
 // object with non-nil maps
 func NewManifest() *Manifest {
 	return &Manifest{
-		Repositories: make(map[string]*Repository),
+		Repositories: make(map[string]*document.Repository),
 	}
 }
 

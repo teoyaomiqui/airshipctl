@@ -1,0 +1,9 @@
+---
+url: github.com:src-d/go-git.git
+target-path: "go-git"
+commitHash: 8d20cc5916edf7cfa6a9c5ed069f0640dc823c12
+auth:
+  type: ssh-key
+  sshKey: "/Users/kkalinovskiy/.ssh/id_rsa"
+  username: git
+

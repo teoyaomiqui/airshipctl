@@ -15,6 +15,7 @@ func NewDocumentCommand(rootSettings *environment.AirshipCTLSettings) *cobra.Com
 	}
 
 	documentRootCmd.AddCommand(secret.NewSecretCommand(rootSettings))
+	documentRootCmd.AddCommand(NewDocumentPullCommand(rootSettings))
 
 	return documentRootCmd
 }

@@ -18,7 +18,6 @@ package config
 
 import (
 	"io/ioutil"
-	"net/url"
 	"path/filepath"
 	"testing"
 
@@ -26,6 +25,8 @@ import (
 	kubeconfig "k8s.io/client-go/tools/clientcmd/api"
 
 	"github.com/stretchr/testify/require"
+
+	"opendev.org/airship/airshipctl/pkg/document"
 )
 
 // DummyConfig used by tests, to initialize min set of data
@@ -86,13 +87,8 @@ func DummyManifest() *Manifest {
 	return m
 }
 
-func DummyRepository() *Repository {
-	url, _ := url.Parse("http://dummy.url.com")
-	return &Repository{
-		Url:        url,
-		Username:   "dummy_user",
-		TargetPath: "dummy_targetpath",
-	}
+func DummyRepository() *document.Repository {
+	return document.NewRepositoryFromSpec(".", &document.RepositorySpec{})
 }
 
 func DummyAuthInfo() *AuthInfo {
