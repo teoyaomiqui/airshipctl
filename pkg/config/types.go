@@ -17,8 +17,6 @@ limitations under the License.
 package config
 
 import (
-	"net/url"
-
 	"k8s.io/client-go/tools/clientcmd"
 	kubeconfig "k8s.io/client-go/tools/clientcmd/api"
 )
@@ -130,16 +128,48 @@ type Manifest struct {
 // Information such as location, authentication info,
 // as well as details of what to get such as branch, tag, commit it, etc.
 type Repository struct {
-	// URL for Repositor,
-	Url *url.URL `json:"url"`
+	// Name of the repository
+	name string
+	// URLString for Repository,
+	URLString string `json:"url"`
+	// Auth holds authentication options against remote
+	Auth *RepoAuth `json:"auth,omitempty"`
+	// CheckoutOptions Holds options to checkout repository
+	CheckoutOptions *RepoCheckout `json:"checkout,omitempty"`
+	// RemoteName is a remote that will be added with url, and used to checkout
+}
 
-	// Username is the username for authentication to the repository .
-	// +optional
+// Auth struct describies method of authentication agaist given repository
+type RepoAuth struct {
+	// Type of the authentication method to be used with given repository
+	// supported types are "ssh-key", "ssh-pass", "http-basic"
+	Type string `json:"type,omitempty"`
+	//KeyPassword is a password decrypt ssh private key (used with ssh-key auth type)
+	KeyPassword string `json:"key-pass,omitempty"`
+	// KeyPath is path to private ssh key on disk (used with ssh-key auth type)
+	KeyPath string `json:"ssh-key,omitempty"`
+	//HTTPPassword is password for basic http authentication (used with http-basic auth type)
+	HTTPPassword string `json:"http-pass,omitempty"`
+	// SSHPassword is password for ssh password authnetication (used with ssh-pass)
+	SSHPassword string `json:"ssh-pass,omitempty"`
+	// Username to authenticate against git remote (used with any type)
 	Username string `json:"username,omitempty"`
+}
 
-	// Clone To Name  Should always be relative to the setting of Manifest TargetPath.
-	// Defines where ths repo will be cloned to locally.
-	TargetPath string `json:"target-path"`
+// Checkout container holds information how to checkout repository
+// Each field is mutually exclusive
+type RepoCheckout struct {
+	// CommitHash is full hash of the commit that will be used to checkout
+	CommitHash string `json:"commit-hash,omitempty"`
+	// Branch is the branch name to checkout
+	Branch string `json:"branch"`
+	// Tag is the tag name to checkout
+	Tag string `json:"tag"`
+	// RemoteRef is not supported currently TODO
+	// RemoteRef is used for remote checkouts such as gerrit change requests/github pull request
+	// for example refs/changes/04/691202/5
+	// TODO Add support for fetching remote refs
+	RemoteRef string `json:"remote-ref"`
 }
 
 // Holds the complex cluster name information

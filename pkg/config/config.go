@@ -735,30 +735,6 @@ func (m *Manifest) String() string {
 	return string(yaml)
 }
 
-// Repository functions
-func (r *Repository) Equal(s *Repository) bool {
-	if s == nil {
-		return r == s
-	}
-	var urlMatches bool
-	if r.Url != nil && s.Url != nil {
-		urlMatches = (r.Url.String() == s.Url.String())
-	} else {
-		// this catches cases where one or both are nil
-		urlMatches = (r.Url == s.Url)
-	}
-	return urlMatches &&
-		r.Username == s.Username &&
-		r.TargetPath == s.TargetPath
-}
-func (r *Repository) String() string {
-	yaml, err := yaml.Marshal(&r)
-	if err != nil {
-		return ""
-	}
-	return string(yaml)
-}
-
 // Modules functions
 func (m *Modules) Equal(n *Modules) bool {
 	if n == nil {
