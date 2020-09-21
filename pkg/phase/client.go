@@ -68,13 +68,12 @@ func (p *phase) Executor() (ifc.Executor, error) {
 		return nil, err
 	}
 
-	var bundle document.Bundle
-	// just pass nil bundle if DocumentRoot is empty, executors should be ready for that
-	if docRoot := p.DocumentRoot(); docRoot != "" {
-		bundle, err = document.NewBundleByPath(docRoot)
-		if err != nil {
-			return nil, err
+	var bundleFactory document.BundleFactoryFunc = func() (document.Bundle, error) {
+		docRoot, bundleErr := p.DocumentRoot()
+		if bundleErr != nil {
+			return nil, bundleErr
 		}
+		return document.NewBundleByPath(docRoot)
 	}
 
 	refGVK := p.apiObj.Config.ExecutorRef.GroupVersionKind()
@@ -103,7 +102,7 @@ func (p *phase) Executor() (ifc.Executor, error) {
 	return executorFactory(
 		ifc.ExecutorConfig{
 			ClusterMap:       cMap,
-			ExecutorBundle:   bundle,
+			BundleFactory:    bundleFactory,
 			PhaseName:        p.apiObj.Name,
 			KubeConfig:       kubeconf,
 			ExecutorDocument: executorDoc,
@@ -143,13 +142,16 @@ func (p *phase) Render(w io.Writer, options ifc.RenderOptions) error {
 }
 
 // DocumentRoot root that holds all the documents associated with the phase
-func (p *phase) DocumentRoot() string {
+func (p *phase) DocumentRoot() (string, error) {
 	if p.apiObj.Config.DocumentEntryPoint == "" {
-		return ""
+		return "", ErrDocumentEntrypointNotDefined{
+			PhaseName:      p.apiObj.Name,
+			PhaseNamespace: p.apiObj.Namespace,
+		}
 	}
 
 	targetPath := p.helper.TargetPath()
-	return filepath.Join(targetPath, p.apiObj.Config.DocumentEntryPoint)
+	return filepath.Join(targetPath, p.apiObj.Config.DocumentEntryPoint), nil
 }
 
 // Details returns description of the phase
