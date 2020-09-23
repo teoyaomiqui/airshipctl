@@ -16,8 +16,10 @@ package phase
 
 import (
 	"io"
+	"strings"
 
 	"opendev.org/airship/airshipctl/pkg/config"
+	"opendev.org/airship/airshipctl/pkg/document"
 	"opendev.org/airship/airshipctl/pkg/phase/ifc"
 )
 
@@ -78,4 +80,57 @@ func (c *PlanCommand) RunE() error {
 	}
 
 	return PrintPlan(plan, c.Writer)
+}
+
+// RenderFlags holds filters for selector
+type RenderFlags struct {
+	// Label filters documents by label string
+	Label string
+	// Annotation filters documents by annotation string
+	Annotation string
+	// APIVersion filters documents by API group and version
+	APIVersion string
+	// Kind filters documents by document kind
+	Kind    string
+	PhaseID ifc.ID
+}
+
+// RenderCommand phase render command
+type RenderCommand struct {
+	Options RenderFlags
+	Factory config.Factory
+}
+
+// RunE executes render command
+func (c *RenderCommand) RunE(out io.Writer) error {
+	cfg, err := c.Factory()
+	if err != nil {
+		return err
+	}
+
+	helper, err := NewHelper(cfg)
+	if err != nil {
+		return err
+	}
+
+	client := NewClient(helper)
+	phase, err := client.PhaseByID(c.Options.PhaseID)
+	if err != nil {
+		return err
+	}
+
+	groupVersion := strings.Split(c.Options.APIVersion, "/")
+	group := ""
+	version := groupVersion[0]
+	if len(groupVersion) > 1 {
+		group = groupVersion[0]
+		version = strings.Join(groupVersion[1:], "/")
+	}
+
+	sel := document.NewSelector().
+		ByLabel(c.Options.Label).
+		ByAnnotation(c.Options.Annotation).
+		ByGvk(group, version, c.Options.Kind)
+
+	return phase.Render(out, ifc.RenderOptions{FilterSelector: sel})
 }
