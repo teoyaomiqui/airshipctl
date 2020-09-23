@@ -35,7 +35,9 @@ airshipctl phase render initinfra -l app=helm,service=tiller -k Deployment
 
 // NewRenderCommand create a new command for document rendering
 func NewRenderCommand(cfgFactory config.Factory) *cobra.Command {
-	rc := &phase.RenderCommand{}
+	rc := &phase.RenderCommand{
+		Factory: cfgFactory,
+	}
 	renderCmd := &cobra.Command{
 		Use:     "render PHASE_NAME",
 		Short:   "Render phase documents from model",
