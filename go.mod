@@ -5,22 +5,22 @@ go 1.13
 require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/chai2010/gettext-go v0.0.0-20170215093142-bf70f2a70fb1 // indirect
-	github.com/docker/docker v1.4.2-0.20200203170920-46ec8731fbce
+	github.com/docker/docker v20.10.24+incompatible
 	github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c // indirect
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git-fixtures/v4 v4.0.1
 	github.com/go-git/go-git/v5 v5.0.0
-	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc // indirect
 	github.com/huandu/xstrings v1.3.1 // indirect
 	github.com/metal3-io/baremetal-operator v0.0.0-20200501205115-2c0dc9997bfa
+	github.com/moby/term v0.5.0 // indirect
 	github.com/onsi/gomega v1.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
 	github.com/stretchr/testify v1.4.0
-	golang.org/x/tools v0.0.0-20200619210111-0f592d2728bb // indirect
+	gotest.tools/v3 v3.5.0 // indirect
 	k8s.io/api v0.17.4
 	k8s.io/apiextensions-apiserver v0.17.4
 	k8s.io/apimachinery v0.17.4
